@@ -2,7 +2,7 @@
 # By Emre Motan  emre@emremotan.com
 # Released under a "Simplified BSD" license
 
-import random, sys, copy, os, pygame, ConfigParser
+import random, sys, copy, os, pygame, configparser
 os.environ['PYGAME_FREETYPE'] = '1'
 import pygame.locals as pg
 from pygame.mixer import *
@@ -46,8 +46,8 @@ class Map(object):
 
     def load_file(self, filename="Maps\level.map"):
         """Load the level from specified file."""
-
-        parser = ConfigParser.ConfigParser()
+        
+        parser = configparser.ConfigParser()
         parser.read(filename)
         self.tileset = parser.get("level", "tileset")
 
@@ -69,9 +69,9 @@ class Map(object):
         image = pygame.image.load(filename).convert()
         image_width, image_height = image.get_size()
         tile_table = []
-        for tile_y in range(0, image_height/height):
+        for tile_y in range(0, int(image_height/height)):
             line = []
-            for tile_x in range(0, image_width/width):
+            for tile_x in range(0, int(image_width/width)):
                 rect = (tile_x*width, tile_y*height, width, height)
                 tile_table.append(image.subsurface(rect))
         return tile_table
@@ -147,9 +147,9 @@ class Player():
         image = pygame.image.load(filename).convert()
         image_width, image_height = image.get_size()
         tile_table = []
-        for tile_y in range(0, image_height/height):
+        for tile_y in range(0, int(image_height/height)):
             line = []
-            for tile_x in range(0, image_width/width):
+            for tile_x in range(0, int(image_width/width)):
                 rect = (tile_x*width, tile_y*height, width, height)
                 tile_table.append(image.subsurface(rect))
         return tile_table
@@ -172,6 +172,8 @@ class Game(object):
     """The main game object."""
 
     def __init__(self):
+        os.chdir('c:\\Users\\User\\Documents\\GitHub\\PyDragon')
+
         self.pressed_key = None
         self.quit = False
         #self.shadows = pygame.sprite.RenderUpdates()
@@ -182,7 +184,7 @@ class Game(object):
     def main(self):
         """Run the main loop."""
 
-        #TitleScreen().main()
+        TitleScreen().main()
 
         self.InitNewGame()
 
@@ -215,20 +217,20 @@ class Game(object):
         def walk(d):
             """Start walking in specified direction."""
 
-            x, y = self.player.pos
+            # x, y = self.player.pos
             self.player.direction = d
             #if not self.level.is_blocking(x+DX[d], y+DY[d]):
             #    self.player.animation = self.player.walk_animation()
 
-            if pressed(pg.K_UP):
-                walk(0)
-            elif pressed(pg.K_DOWN):
-                walk(2)
-            elif pressed(pg.K_LEFT):
-                walk(3)
-            elif pressed(pg.K_RIGHT):
-                walk(1)
-            self.pressed_key = None
+        if pressed(pg.K_UP):
+            walk(0)
+        elif pressed(pg.K_DOWN):
+            walk(2)
+        elif pressed(pg.K_LEFT):
+            walk(3)
+        elif pressed(pg.K_RIGHT):
+            walk(1)
+        self.pressed_key = None
 
     def MainGameLoop(self):
         # The main game loop
@@ -280,7 +282,7 @@ class TitleScreen(object):
         pygame.display.flip()
 
         pygame.mixer.init(96000)
-        pygame.mixer.music.load("C:\Dev\PyDragon\Music\(002-048) Dragon Quest - Koichi Sugiyama.mp3")
+        pygame.mixer.music.load("Music\(002-048) Dragon Quest - Koichi Sugiyama.mp3")
         pygame.mixer.music.play()
 
         while True: # Main loop for the start screen.
